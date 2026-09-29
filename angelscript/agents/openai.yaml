@@ -1,0 +1,3 @@
+interface:
+  display_name: "AngelScript"
+  short_description: "Write and debug AngelScript with local references"
