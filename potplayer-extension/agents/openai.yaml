@@ -1,0 +1,4 @@
+interface:
+  display_name: "PotPlayer Extension"
+  short_description: "Build PotPlayer media extensions in AngelScript"
+  default_prompt: "Use $potplayer-extension to create or debug a PotPlayer AngelScript media extension using its bundled API and callback references."
