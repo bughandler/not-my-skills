@@ -58,8 +58,8 @@ Only introduce background threads when needed. `HostCreateThread` expects a call
 | API text's custom string declarations and example mutation style differ | Confirm required mutation/return semantics as described under PotPlayer string bindings above |
 | URL-list example calls `HostUrlGetStringGoogle`, absent from the API text | Treat as an undocumented/version-specific helper; do not assume availability or invent its implementation |
 | Playback example calls `HostDecodeSigUrl`, absent from the API text | Preserve only in a demonstrated compatible host; the bundled document cannot establish its registration or complete contract |
-| Playback header comments disagree with actual `PlayitemParse` | Use the implemented three-parameter, string-returning signature |
+| Playback header entry differs from actual `PlayitemParse` | Preserve the mandatory parsed header entry and implement the three-parameter, string-returning function; do not normalize one to the other |
 | Some examples index an empty response, leak handles, contain fixed credentials, or log full responses | Learn the callback structure without copying those flaws |
-| Lifecycle/cancellation hooks occur only in comments in parts of the examples | Do not claim tested behavior or mandatory implementation |
+| Lifecycle/cancellation hooks occur only in the header in parts of the examples | Preserve those header entries; their presence alone does not prove runtime behavior or require function bodies |
 
 When a required detail is absent, state the exact gap and use target-host diagnostics or task-provided evidence. Do not fill it with a plausible-looking API.

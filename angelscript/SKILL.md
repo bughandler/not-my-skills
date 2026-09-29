@@ -1,6 +1,6 @@
 ---
 name: angelscript
-description: Write, review, explain, and debug AngelScript scripts using a self-contained language reference. Use for AngelScript syntax, handles, classes, callbacks, optional SDK libraries, and script/host integration issues.
+description: Guidelines for AngelScript script language. AngelScript syntax, handles, classes, callbacks, optional SDK libraries, and script/host integration issues.
 ---
 
 # AngelScript

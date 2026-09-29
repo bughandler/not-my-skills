@@ -1,6 +1,6 @@
 ---
 name: potplayer-extension
-description: Create, review, and debug PotPlayer AngelScript media extensions for URL browsing, playback URL resolution, playlists, metadata, and quality selection. Use for PotPlayer extension callbacks and Host APIs, not browser extensions or general player automation.
+description: PotPlayer extension development, PotPlayer playback URL resolution, playlists, metadata, and quality selection.
 ---
 
 # PotPlayer extension development
@@ -9,7 +9,7 @@ Build AngelScript scripts hosted by PotPlayer. This skill covers PotPlayer's ext
 
 ## Workflow
 
-1. Choose the extension role: `Media/UrlList` supplies browse/search results; `Media/PlayParse` resolves a page into playable media or expands a playlist. A service can need both. Preserve an existing extension's callback names, signatures, dictionary keys, and output types.
+1. Choose the extension role: `Media/UrlList` supplies browse/search results; `Media/PlayParse` resolves a page into playable media or expands a playlist. A service can need both. Include the mandatory top-of-file comment section that PotPlayer parses to recognize the extension. Preserve an existing extension's header, callback names, signatures, dictionary keys, and output types.
 2. Read [callback contracts](references/contracts.md) for the chosen role. These contracts come from inspected YouTube and Twitch implementations; comment-only hooks and version-dependent behavior are explicitly marked.
 3. Look up host declarations in the bundled [API document](references/api.txt). Use [host patterns and limitations](references/host-patterns.md) for HTTP, parsing, configuration, resource cleanup, and known documentation gaps. Prefer documented APIs over undocumented service-specific helpers.
 4. Implement the smallest useful callback path. Start with cheap URL classification, then fetch/parse, then map validated results into the host's dictionary contract. Keep service parsing separate enough to exercise with response fixtures. For examples of output construction, use [implementation patterns](references/patterns.md).
@@ -17,8 +17,9 @@ Build AngelScript scripts hosted by PotPlayer. This skill covers PotPlayer's ext
 
 ## Host invariants
 
+- The top-of-file comment section is mandatory PotPlayer-parsed extension information. Preserve its placement, structure, and callback entries; do not remove or rewrite it as ordinary documentation. For new scripts, start with the appropriate role's header in [callback contracts](references/contracts.md).
 - There is no automatic `main`. PotPlayer calls specifically named functions. `GetCategorys` and `PlayitemParse` must retain their exact spelling and case.
-- The implemented playback signature returns a **string** and writes metadata and qualities through reference parameters. Do not copy the stale one-argument, array-returning declaration found in example comments.
+- The implemented playback signature returns a **string** and writes metadata and qualities through reference parameters. Keep this function signature distinct from the header's one-argument, array-returning `PlayitemParse` entry; preserve the header entry rather than assuming it is stale.
 - Treat `MetaData` and `QualityList` as potentially absent: the examples use `@MetaData !is null` and `@QualityList !is null`. Guard each output independently, including inside helpers.
 - Return an empty string for unsuccessful playback resolution and an empty array for no list results. Do not return a fabricated stream URL or an error message as a playable URL.
 - PotPlayer's embedded engine version and registered libraries are not fully established by these examples. A standalone language reference does not establish that a feature or API is available in the target PotPlayer build.
@@ -28,6 +29,6 @@ Build AngelScript scripts hosted by PotPlayer. This skill covers PotPlayer's ext
 
 The observed layout uses `Media/PlayParse/MediaPlayParse - Service.as` and `Media/UrlList/MediaUrlList - Service.as`, under the extension root, with optional same-basename `.ico` files. The examples also use role-local `config.ini` files; those files configure those scripts and are not a demonstrated universal extension manifest. Do not assume both roles or an icon are mandatory.
 
-Verify only the affected behaviors: discovery/loading, supported and unrelated URLs, empty/malformed responses, authentication failure, quality changes, playlist ordering, browsing pagination, Unicode metadata, and repeated invocation/resource cleanup. For a resolver, verify both the returned default media URL and any selectable alternatives. Installation/reload UI varies by build and is not specified by this reference.
+Check that the mandatory header is present before code and preserved during formatting or packaging. Verify only the affected behaviors: discovery/loading, supported and unrelated URLs, empty/malformed responses, authentication failure, quality changes, playlist ordering, browsing pagination, Unicode metadata, and repeated invocation/resource cleanup. For a resolver, verify both the returned default media URL and any selectable alternatives. Installation/reload UI varies by build and is not specified by this reference.
 
 The bundled API text preserves the supplied declarations and known typos; only its opening external documentation URL was removed to keep this package free of external links. The other references are synthesized development guidance, not a claim that the historical providers still operate.

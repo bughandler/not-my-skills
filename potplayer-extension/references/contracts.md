@@ -1,6 +1,54 @@
 # Media callback and dictionary contracts
 
-These observations are distilled from four real implementations: YouTube and Twitch URL-list scripts, and YouTube and Twitch playback parsers. Implemented functions are stronger evidence than their introductory comments. This is an observed interface, not an exhaustive versioned host specification.
+These observations are distilled from four real implementations: YouTube and Twitch URL-list scripts, and YouTube and Twitch playback parsers. The user confirmed that PotPlayer parses the top-of-file comment section and that this section is mandatory. Header entries and executable function signatures have distinct roles; preserve both. This is not an exhaustive versioned host specification.
+
+## Mandatory extension header
+
+Every extension script must begin with its extension comment section, before executable declarations. Preserve the introductory description and callback comment list when editing an existing script. Do not strip comments during packaging or automatically normalize header entries to match executable signatures. A callback listed in the header need not have an implementation in every example; that is not permission to delete its header entry.
+
+The following role-specific headers reproduce the structure and entries of the inspected Twitch examples, with neutral descriptions. They are starting points, not a claim that a smaller subset has been verified. Preserve additional entries from the target script when extending it.
+
+URL-list header:
+
+```angelscript
+/*
+    Media URL list extension.
+*/
+
+// string GetTitle() -> get title for UI
+// string GetVersion -> get version for manage
+// string GetDesc() -> get detail information
+// string GetLoginTitle() -> get title for login dialog
+// string GetLoginDesc() -> get desc for login dialog
+// string ServerCheck(string User, string Pass) -> server check
+// string ServerLogin(string User, string Pass) -> login
+// void ServerLogout() -> logout
+// array<dictionary> GetCategorys() -> get category list
+// array<dictionary> GetUrlList(string Category, string Genre, string PathToken, string Query, string PageToken) -> get url list for Category
+```
+
+Playback-parser header:
+
+```angelscript
+/*
+    Media playback parse extension.
+*/
+
+// string GetTitle() -> get title for UI
+// string GetVersion -> get version for manage
+// string GetDesc() -> get detail information
+// string GetLoginTitle() -> get title for login dialog
+// string GetLoginDesc() -> get desc for login dialog
+// string ServerCheck(string User, string Pass) -> server check
+// string ServerLogin(string User, string Pass) -> login
+// void ServerLogout() -> logout
+// bool PlayitemCheck(const string &in) -> check playitem
+// array<dictionary> PlayitemParse(const string &in) -> parse playitem
+// bool PlaylistCheck(const string &in) -> check playlist
+// array<dictionary> PlaylistParse(const string &in) -> parse playlist
+```
+
+The examples' `GetVersion` header entry omits parentheses, and their `PlayitemParse` header entry differs from the implemented function. Preserve these header forms; implement the callable functions using the signatures below. The header parser's complete grammar and whitespace sensitivity have not been established, so prefer retaining an existing working header verbatim.
 
 ## Shared callbacks
 
@@ -67,7 +115,7 @@ string PlayitemParse(const string &in path, dictionary &MetaData,
                      array<dictionary> &QualityList)
 ```
 
-`PlayitemCheck` classifies supported input. Keep it cheap, and validate the hostname/path rather than matching a provider name anywhere in arbitrary text. `PlayitemParse` returns a playable media URL, with an empty string on failure. Its output containers can be absent; guard each independently. The stale example comment showing `array<dictionary> PlayitemParse(const string &in)` is not the implemented signature.
+`PlayitemCheck` classifies supported input. Keep it cheap, and validate the hostname/path rather than matching a provider name anywhere in arbitrary text. `PlayitemParse` returns a playable media URL, with an empty string on failure. Its output containers can be absent; guard each independently. The header entry `array<dictionary> PlayitemParse(const string &in)` must be preserved separately from this implemented signature.
 
 Observed metadata:
 
@@ -109,7 +157,7 @@ These are implemented in the YouTube parser. Return ordered rows using `url`, `t
 
 Playlist `duration` is inconsistent across example branches (including strings of seconds); do not apply playback metadata's milliseconds rule blindly to playlist rows. Confirm the target consumer's convention before changing it.
 
-`void PlayitemCancel()`, `void PlaylistCancel()`, and `string GetStatus()` appear only in the inspected playback comment list, without implementations. Treat these as candidate hooks to verify, not required callbacks or a proven cancellation mechanism.
+`void PlayitemCancel()`, `void PlaylistCancel()`, and `string GetStatus()` appear in the inspected YouTube playback header without implementations. Preserve those header entries when editing that script. Their presence does not establish cancellation behavior or require inventing function bodies.
 
 ## Embedded broadcast browser
 

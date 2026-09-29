@@ -1,6 +1,6 @@
 # Small implementation patterns
 
-These are newly written fragments illustrating the observed host contracts. They contain no service endpoints and are not complete provider integrations or host-tested templates. Keep only the callbacks for the extension role being implemented.
+These are newly written fragments illustrating the observed host contracts. They contain no service endpoints and are not complete provider integrations or host-tested templates. Before assembling any fragment into an extension script, prepend the mandatory role-specific comment header from [callback contracts](contracts.md), or preserve the target script's existing header. The fragments omit that header only because they are partial snippets. Choose function implementations for the extension role without removing header entries merely because they lack bodies.
 
 ## Category construction
 
