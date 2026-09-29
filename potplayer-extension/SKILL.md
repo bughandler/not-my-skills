@@ -5,12 +5,12 @@ description: Create, review, and debug PotPlayer AngelScript media extensions fo
 
 # PotPlayer extension development
 
-Build AngelScript scripts hosted by PotPlayer. All development references are bundled here; do not require another skill, outside documentation, or network lookup to use this skill. Service-specific protocols not covered here require evidence supplied with the task rather than guessed endpoints.
+Build AngelScript scripts hosted by PotPlayer. This skill covers PotPlayer's extension contracts and host APIs. For language syntax and semantics, use a standalone AngelScript skill when the user provides one, such as `angelscript`; no specific installation path is required. PotPlayer references are bundled here. Service-specific protocols not covered here require evidence supplied with the task rather than guessed endpoints.
 
 ## Workflow
 
 1. Choose the extension role: `Media/UrlList` supplies browse/search results; `Media/PlayParse` resolves a page into playable media or expands a playlist. A service can need both. Preserve an existing extension's callback names, signatures, dictionary keys, and output types.
-2. Read [callback contracts](references/contracts.md) for the chosen role and [AngelScript compatibility](references/angelscript.md) before implementing it. These contracts come from inspected YouTube and Twitch implementations; comment-only hooks and version-dependent behavior are explicitly marked.
+2. Read [callback contracts](references/contracts.md) for the chosen role. These contracts come from inspected YouTube and Twitch implementations; comment-only hooks and version-dependent behavior are explicitly marked.
 3. Look up host declarations in the bundled [API document](references/api.txt). Use [host patterns and limitations](references/host-patterns.md) for HTTP, parsing, configuration, resource cleanup, and known documentation gaps. Prefer documented APIs over undocumented service-specific helpers.
 4. Implement the smallest useful callback path. Start with cheap URL classification, then fetch/parse, then map validated results into the host's dictionary contract. Keep service parsing separate enough to exercise with response fixtures. For examples of output construction, use [implementation patterns](references/patterns.md).
 5. Validate callback recognition, failure behavior, and output consumption in the target PotPlayer build when available. Record the build and distinguish reference review, script compilation/loading, and actual playback. Without a runnable host, report reference-checked code and the remaining runtime checks; a generic AngelScript engine cannot prove PotPlayer compatibility.
@@ -21,7 +21,7 @@ Build AngelScript scripts hosted by PotPlayer. All development references are bu
 - The implemented playback signature returns a **string** and writes metadata and qualities through reference parameters. Do not copy the stale one-argument, array-returning declaration found in example comments.
 - Treat `MetaData` and `QualityList` as potentially absent: the examples use `@MetaData !is null` and `@QualityList !is null`. Guard each output independently, including inside helpers.
 - Return an empty string for unsuccessful playback resolution and an empty array for no list results. Do not return a fabricated stream URL or an error message as a playable URL.
-- SDK features are available only if the host registers them. The bundled language guidance is based on AngelScript 2.39.0; PotPlayer's embedded version is not established by these examples. Avoid modern syntax and optional library APIs without evidence from the target host.
+- PotPlayer's embedded engine version and registered libraries are not fully established by these examples. A standalone language reference does not establish that a feature or API is available in the target PotPlayer build.
 - Keep request authentication separate from media playback headers. A successful API request does not prove the player can fetch the returned stream.
 
 ## Packaging and verification

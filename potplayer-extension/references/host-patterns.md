@@ -40,6 +40,10 @@ The examples store per-role options and credentials in `config.ini` and read rel
 
 `HostSaveString`/`HostLoadString` and integer equivalents are described as **temporary** storage. Do not promise persistence across application restarts. Prefix application-specific keys to avoid unintended collisions. Avoid network requests in global initializers when failure or initialization order can leave unusable state; initialize deliberately through a verified lifecycle hook or on demand.
 
+## PotPlayer string bindings
+
+The inspected scripts use `size()`, `empty()`, `find()`, and `rfind()`. Preserve host-supported names rather than substituting methods from a standalone SDK reference. The API text's custom `MakeLower`, `TrimRight`, and `replace` declarations have unusual const/return annotations, while examples also call them for mutation. Confirm mutation versus returned-copy behavior in the target host when correctness depends on it. `replace` is documented to return `int`, not a replacement string.
+
 ## Concurrency and diagnostics
 
 Use `HostOpenConsole` and `HostPrintUTF8` for focused diagnostics. Match encoding when using the UTF16 variants. Keep routine output minimal and redact secrets.
@@ -51,7 +55,7 @@ Only introduce background threads when needed. `HostCreateThread` expects a call
 | Observation | Development decision |
 |---|---|
 | API text says `string int HostLoadInteger`, `bool bool Open`, and has `_t` integer spelling inconsistencies | These are documentation defects, not reliable compilable declarations; verify the affected symbol in the target host |
-| API text's custom string declarations and example mutation style differ | Confirm required mutation/return semantics; see the bundled AngelScript guide |
+| API text's custom string declarations and example mutation style differ | Confirm required mutation/return semantics as described under PotPlayer string bindings above |
 | URL-list example calls `HostUrlGetStringGoogle`, absent from the API text | Treat as an undocumented/version-specific helper; do not assume availability or invent its implementation |
 | Playback example calls `HostDecodeSigUrl`, absent from the API text | Preserve only in a demonstrated compatible host; the bundled document cannot establish its registration or complete contract |
 | Playback header comments disagree with actual `PlayitemParse` | Use the implemented three-parameter, string-returning signature |
